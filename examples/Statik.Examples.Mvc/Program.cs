@@ -21,8 +21,8 @@ namespace Statik.Examples.Mvc
             using (var host = webBuilder.BuildWebHost())
             {
                 host.Listen();
-                Console.WriteLine("Listening on port 8000...");
-                Console.WriteLine("Try visiting http://localhost:8000/hello");
+                Console.WriteLine($"Listening on port {StatikDefaults.DefaultPort}...");
+                Console.WriteLine($"Try visiting http://localhost:{StatikDefaults.DefaultPort}/hello");
                 Console.WriteLine("Press enter to exit...");
                 Console.ReadLine();
                 

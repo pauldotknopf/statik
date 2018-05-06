@@ -32,7 +32,7 @@ namespace Statik.Web.Impl
             _serviceActions.Add(action);
         }
 
-        public Hosting.IWebHost BuildWebHost(string appBase = null, int port = 8000)
+        public Hosting.IWebHost BuildWebHost(string appBase = null, int port = StatikDefaults.DefaultPort)
         {
             return _hostBuilder.BuildWebHost(
                 port,

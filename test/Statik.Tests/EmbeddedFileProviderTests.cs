@@ -20,7 +20,7 @@ namespace Statik.Tests
             var file = _fileProvider.GetFileInfo("/file1.txt");
             
             Assert.True(file.Exists);
-            Assert.Equal(file.Name, "file1.txt");
+            Assert.Equal("file1.txt", file.Name);
         }
 
         [Fact]

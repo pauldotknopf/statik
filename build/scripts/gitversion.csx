@@ -12,6 +12,7 @@ public static class GitVersion
         var result = new GitVersion.GitVersionResult
         {
             Version = json.MajorMinorPatch,
+            PreReleaseLabel = json.PreReleaseLabel,
             PreReleaseTag = json.PreReleaseTag
         };
         if(!string.IsNullOrEmpty(result.PreReleaseTag))
@@ -28,6 +29,8 @@ public static class GitVersion
     public class GitVersionResult
     {
         public string Version { get; set; }
+
+        public string PreReleaseLabel { get; set; }
 
         public string PreReleaseTag { get; set; }
 

@@ -48,4 +48,13 @@ public static class Path
         text = text.Replace(oldValue, newValue);
         System.IO.File.WriteAllText(file, text);
     }
+
+    public static List<string> GetFiles(string directory, string pattern = null)
+    {
+        if(string.IsNullOrEmpty(pattern))
+        {
+            return System.IO.Directory.GetFiles(directory, pattern).ToList();
+        }
+        return System.IO.Directory.GetFiles(directory).ToList();
+    }
 }

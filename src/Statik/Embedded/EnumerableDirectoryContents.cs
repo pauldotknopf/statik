@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 
 namespace Statik.Embedded
@@ -47,19 +48,27 @@ namespace Statik.Embedded
             if (_matched == null)
             {
                 var matched = new List<IFileInfo>();
-                
+
+                var directories = new List<string>();
                 foreach (var entry in _entries.Where(x => x.Path.StartsWith(_subPath)))
                 {
-                    var remaining = entry.Path.Substring(_subPath.Length);
-                    if (remaining.TrimStart('/').Contains("/"))
+                    var remaining = entry.Path.Substring(_subPath.Length).TrimStart('/');
+                    if (remaining.IndexOf("/", StringComparison.Ordinal) >= 0)
                     {
-                        // TODO:
-                        // this is a directory
+                        // This is a directory
+                        var directory = $"/{remaining.Substring(0, remaining.IndexOf("/", StringComparison.OrdinalIgnoreCase))}";
+                        if(!directories.Contains(directory))
+                            directories.Add(directory);
                     }
                     else
                     {
                         matched.Add(new EmbeddedFileInfo(entry, _assembly));
                     }
+                }
+
+                foreach (var directory in directories)
+                {
+                    matched.Add(new EmbeddedDirectoryInfo(directory));
                 }
 
                 _matched = matched;

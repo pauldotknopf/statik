@@ -56,17 +56,47 @@ namespace Statik.Tests
 
             var files = directory.ToList();
             
-            Assert.Equal(2, files.Count);
+            Assert.Equal(3, files.Count);
 
             foreach (var file in files)
             {
                 switch (file.Name)
                 {
                     case "file1.txt":
-                        Assert.Equal(false, file.IsDirectory);
+                        Assert.False(file.IsDirectory);
+                        break;
+                    case "file2.txt":
+                        Assert.False(file.IsDirectory);
                         break;
                     case "nested":
-                        Assert.Equal(true, file.IsDirectory);
+                        Assert.True(file.IsDirectory);
+                        break;
+                    default:
+                        Assert.True(false, $"Invalid file name {file.Name}");
+                        break;
+                }
+            }
+            
+            directory = _fileProvider.GetDirectoryContents("/nested");
+            
+            Assert.True(directory.Exists);
+
+            files = directory.ToList();
+            
+            Assert.Equal(3, files.Count);
+
+            foreach (var file in files)
+            {
+                switch (file.Name)
+                {
+                    case "file3.txt":
+                        Assert.False(file.IsDirectory);
+                        break;
+                    case "file4.txt":
+                        Assert.False(file.IsDirectory);
+                        break;
+                    case "nested2":
+                        Assert.True(file.IsDirectory);
                         break;
                     default:
                         Assert.True(false, $"Invalid file name {file.Name}");

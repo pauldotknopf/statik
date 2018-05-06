@@ -45,7 +45,7 @@ namespace Statik.Files
         {
             if (fileInfo.IsDirectory)
             {
-                var content = fileProvider.GetDirectoryContents(fileInfo.Name);
+                var content = fileProvider.GetDirectoryContents(Path.Combine(basePath, fileInfo.Name));
 
                 if (content == null || !content.Exists)
                 {

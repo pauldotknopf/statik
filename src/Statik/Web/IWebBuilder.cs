@@ -12,7 +12,7 @@ namespace Statik.Web
 
         void RegisterServices(Action<IServiceCollection> action);
         
-        IWebHost BuildWebHost(string appBase = null, int port = 8000);
+        IWebHost BuildWebHost(string appBase = null, int port = StatikDefaults.DefaultPort);
 
         IVirtualHost BuildVirtualHost(string appBase = null);
     }

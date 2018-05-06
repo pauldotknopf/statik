@@ -11,6 +11,8 @@ using static Runner;
 
 var options = ParseOptions(Args);
 var gitversion = GitVersion.Get("./");
+var nugetSource = "https://api.nuget.org/v3/index.json";
+var nugetApiKey = System.Environment.GetEnvironmentVariable("NUGET_API_KEY");
 
 Log.Info($"Version: {gitversion.FullVersion}");
 
@@ -71,8 +73,16 @@ targets.Add("publish", () =>
         }
     }
 
-    // TODO: deploy nuget packages
-    Log.Warning("TODO: deploy to NuGet...");
+    if(string.IsNullOrEmpty(nugetApiKey))
+    {
+        throw new Exception("No NUGET_API_KEY provided.");
+    }
+
+    foreach(var file in Path.GetFiles("./output", "*.nupkg"))
+    {
+        Log.Info($"Deploying {file}");
+        Process.Run($"dotnet nuget push {file} --source \"{nugetSource}\" --api-key \"{nugetApiKey}\"");
+    }
 });
 
 targets.Add("ci", DependsOn("update-version", "test", "deploy", "publish"), () =>

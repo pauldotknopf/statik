@@ -29,8 +29,8 @@ namespace Statik.Files.Tests
                 File.WriteAllText(Path.Combine(testDirectory.Directory, "test.txt"), "test");
                 Directory.CreateDirectory(Path.Combine(testDirectory.Directory, "nested"));
                 File.WriteAllText(Path.Combine(testDirectory.Directory, "nested", "test2.txt"), "test2");
-                
-                _webBuilder.RegisterFiles(new PhysicalFileProvider(testDirectory.Directory));
+
+                _webBuilder.RegisterDirectory(testDirectory.Directory);
                 
                 using(var host = _webBuilder.BuildVirtualHost())
                 {
@@ -79,7 +79,7 @@ namespace Statik.Files.Tests
                 Directory.CreateDirectory(Path.Combine(testDirectory.Directory, "nested"));
                 File.WriteAllText(Path.Combine(testDirectory.Directory, "nested", "test2.txt"), "test2");
                 
-                _webBuilder.RegisterFiles("/prefix", new PhysicalFileProvider(testDirectory.Directory));
+                _webBuilder.RegisterDirectory("/prefix", testDirectory.Directory);
                 
                 using(var host = _webBuilder.BuildVirtualHost())
                 {

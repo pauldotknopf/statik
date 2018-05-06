@@ -14,12 +14,22 @@ namespace Statik.Files
 {
     public static class WebBuilderExtensions
     {
-        public static void RegisterFiles(this IWebBuilder webBuilder, IFileProvider fileProvider)
+        public static void RegisterDirectory(this IWebBuilder webBuilder, string directory)
         {
-            RegisterFiles(webBuilder, "/", fileProvider);
+            RegisterFileProvider(webBuilder, new PhysicalFileProvider(directory));
         }
-
-        public static void RegisterFiles(this IWebBuilder webBuilder, PathString prefix, IFileProvider fileProvider)
+        
+        public static void RegisterDirectory(this IWebBuilder webBuilder, PathString prefix, string directory)
+        {
+            RegisterFileProvider(webBuilder, prefix, new PhysicalFileProvider(directory));
+        }
+        
+        public static void RegisterFileProvider(this IWebBuilder webBuilder, IFileProvider fileProvider)
+        {
+            RegisterFileProvider(webBuilder, "/", fileProvider);
+        }
+        
+        public static void RegisterFileProvider(this IWebBuilder webBuilder, PathString prefix, IFileProvider fileProvider)
         {
             var contents = fileProvider.GetDirectoryContents("/");
             if(contents == null || !contents.Exists) return;

@@ -12,4 +12,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Statik\Statik.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Embedded/**/*" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Embedded/**/*" />
+  </ItemGroup>
 </Project>

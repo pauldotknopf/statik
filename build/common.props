@@ -1,0 +1,8 @@
+<Project>
+  <Import Project="version.props" />
+
+  <PropertyGroup>
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+  </PropertyGroup>
+
+</Project>

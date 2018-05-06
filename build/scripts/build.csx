@@ -68,8 +68,14 @@ targets.Add("publish", () =>
 
         if(Travis.Branch != "master")
         {
-            Log.Warning("Not on master, skipping publish...");
-            return;
+            // We aren't on master.
+            // The only time we also auto-publish
+            // is if this is a beta build.
+            if(gitversion.PreReleaseLabel != "beta")
+            {
+                Log.Warning("Not on master or beta build, skipping publish...");
+                return;
+            }
         }
     }
 

@@ -12,10 +12,10 @@ namespace Statik.Embedded
     {
         readonly List<EmbeddedFile> _entries;
         readonly string _subPath;
-        private readonly Assembly _assembly;
+        readonly IAssemblyResourceResolver _assembly;
         List<IFileInfo> _matched = null;
 
-        public EnumerableDirectoryContents(List<EmbeddedFile> entries, string subPath, Assembly assembly)
+        public EnumerableDirectoryContents(List<EmbeddedFile> entries, string subPath, IAssemblyResourceResolver assembly)
         {
             _entries = entries;
             _subPath = subPath;

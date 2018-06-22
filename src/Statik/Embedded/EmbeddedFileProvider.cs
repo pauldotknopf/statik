@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
+using Statik.Embedded.Impl;
 
 namespace Statik.Embedded
 {
@@ -13,13 +14,14 @@ namespace Statik.Embedded
     {
         static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars()
             .Where(c => c != '/' && c != '\\').ToArray();
-        readonly Assembly _assembly;
+        readonly IAssemblyResourceResolver _assembly;
         readonly List<EmbeddedFile> _files;
 
-        public EmbeddedFileProvider(Assembly assembly, string prefix)
+        public EmbeddedFileProvider(IAssemblyResourceResolver assembly, string prefix)
         {
             _assembly = assembly;
             _files = _assembly.GetManifestResourceNames()
+                .Where(x => x.StartsWith(prefix))
                 .Select(x =>
                 {
                     // This bit will will create convert the resource name
@@ -32,6 +34,12 @@ namespace Statik.Embedded
                     return new EmbeddedFile(path, x);
                 })
                 .ToList();
+        }
+        
+        public EmbeddedFileProvider(Assembly assembly, string prefix)
+            :this(new AssemblyResourceResolver(assembly), prefix)
+        {
+            
         }
 
         public IFileInfo GetFileInfo(string subpath)

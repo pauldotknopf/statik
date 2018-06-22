@@ -8,9 +8,9 @@ namespace Statik.Embedded
     internal class EmbeddedFileInfo : IFileInfo
     {
         readonly EmbeddedFile _file;
-        readonly Assembly _assembly;
+        readonly IAssemblyResourceResolver _assembly;
 
-        public EmbeddedFileInfo(EmbeddedFile file, Assembly assembly)
+        public EmbeddedFileInfo(EmbeddedFile file, IAssemblyResourceResolver assembly)
         {
             _file = file;
             _assembly = assembly;

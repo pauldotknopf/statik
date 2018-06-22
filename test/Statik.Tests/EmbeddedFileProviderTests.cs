@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using Microsoft.Extensions.FileProviders;
+using Moq;
 using Statik.Embedded;
 using Xunit;
 
@@ -11,7 +14,7 @@ namespace Statik.Tests
         
         public EmbeddedFileProviderTests()
         {
-            _fileProvider = new EmbeddedFileProvider(typeof(EmbeddedFileProviderTests).Assembly, "Statik.Tests.Embedded");
+            _fileProvider = BuildFileProvider("Statik.Tests.Embedded");
         }
 
         [Fact]
@@ -20,7 +23,7 @@ namespace Statik.Tests
             var file = _fileProvider.GetFileInfo("/file1.txt");
             
             Assert.True(file.Exists);
-            Assert.Equal(file.Name, "file1.txt");
+            Assert.Equal("file1.txt", file.Name);
         }
 
         [Fact]
@@ -103,6 +106,54 @@ namespace Statik.Tests
                         break;
                 }
             }
+        }
+
+        [Fact]
+        public void Can_get_files_at_more_root_prefix()
+        {
+            _fileProvider = BuildFileProvider("Statik.Tests", BuildTestAssemblyResourceResolver());
+
+            var directory = _fileProvider.GetDirectoryContents("/");
+            Assert.True(directory.Exists);
+
+            var files = directory.ToList();
+            Assert.Equal(2, files.Count);
+            
+            Assert.Equal("Embedded", files[0].Name);
+            Assert.Equal("Some", files[1].Name);
+        }
+        
+        private IAssemblyResourceResolver BuildTestAssemblyResourceResolver()
+        {
+            var assembly = new Mock<IAssemblyResourceResolver>();
+            assembly.Setup(x => x.GetManifestResourceNames()).Returns(new[]
+            {
+                "Statik.Tests.Embedded.file1.txt",
+                "Statik.Tests.Embedded.file2.txt",
+                "Statik.Tests.Embedded.nested.file3.txt",
+                "Statik.Tests.Embedded.nested.file4.txt",
+                "Statik.Tests.Embedded.nested.nested2.file5.txt",
+                "Statik.Tests.Some.Other.Prefix.file1.txt"
+            });
+            assembly.Setup(x => x.GetManifestResourceStream(It.IsAny<string>()))
+                .Returns(new Func<string, Stream>(fileName =>
+                {
+                    var stream = new MemoryStream();
+                    using (var writer = new StreamWriter(stream))
+                    {
+                        writer.Write(fileName);
+                    }
+
+                    return stream;
+                }));
+            return assembly.Object;
+        }
+
+        private IFileProvider BuildFileProvider(string prefix, IAssemblyResourceResolver assembly = null)
+        {
+            if (assembly == null)
+                assembly = BuildTestAssemblyResourceResolver();
+            return new EmbeddedFileProvider(assembly, prefix);
         }
     }
 }

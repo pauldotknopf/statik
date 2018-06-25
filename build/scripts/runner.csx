@@ -1,5 +1,4 @@
 #r "nuget:PowerArgs, 3.0.0"
-#load "nuget:simple-targets-csx, 6.0.0"
 
 using System;
 using System.Collections.Generic;
@@ -29,11 +28,6 @@ public static class Runner
         }
 
         return options;
-    }
-
-    public static void Run(BuildOptions options, IDictionary<string, SimpleTargets.Target> targets)
-    {
-        SimpleTargetsRunner.Run(new string[]{ options.Target }, targets, Console.Out);
     }
 
     public class BuildOptions

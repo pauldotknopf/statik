@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using Newtonsoft.Json;
+using Statik.Pages;
 using Xunit;
 
-namespace Statik.Pages.Tests
+namespace Statik.Tests
 {
     public class PageDirectoryLoaderTests : IDisposable
     {
@@ -16,10 +14,7 @@ namespace Statik.Pages.Tests
         
         public PageDirectoryLoaderTests()
         {
-            var services = new ServiceCollection();
-            Statik.RegisterServices(services);
-            StatikPages.RegisterServices(services);
-            _pageDirectoryLoader = services.BuildServiceProvider().GetRequiredService<IPageDirectoryLoader>();
+            _pageDirectoryLoader = Statik.GetPageDirectoryLoader();
             _directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Guid.NewGuid().ToString());
             Directory.CreateDirectory(_directory);
         }

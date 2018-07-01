@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Statik.Hosting;
 using Statik.Hosting.Impl;
+using Statik.Pages;
+using Statik.Pages.Impl;
 using Statik.Web;
 using Statik.Web.Impl;
 
@@ -19,6 +21,12 @@ namespace Statik
             return _serviceProvider.GetRequiredService<IWebBuilder>();
         }
 
+        public static IPageDirectoryLoader GetPageDirectoryLoader()
+        {
+            EnsureServiceProvider();
+            return _serviceProvider.GetRequiredService<IPageDirectoryLoader>();
+        }
+
         public static Task ExportHost(IHost host, string directory)
         {
             EnsureServiceProvider();
@@ -30,6 +38,7 @@ namespace Statik
             services.AddSingleton<IHostBuilder, HostBuilder>();
             services.AddSingleton<IHostExporter, HostExporter>();
             services.AddTransient<IWebBuilder, WebBuilder>();
+            services.AddSingleton<IPageDirectoryLoader, PageDirectoryLoader>();
         }
 
         private static void EnsureServiceProvider()

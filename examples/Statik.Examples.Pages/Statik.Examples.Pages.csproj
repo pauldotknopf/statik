@@ -12,7 +12,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Statik.Mvc\Statik.Mvc.csproj" />
-    <ProjectReference Include="..\..\src\Statik.Pages\Statik.Pages.csproj" />
     <ProjectReference Include="..\..\src\Statik\Statik.csproj" />
   </ItemGroup>
   <ItemGroup>

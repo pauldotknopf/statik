@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using Newtonsoft.Json;
 using Statik.Mvc;
@@ -11,14 +10,14 @@ namespace Statik.Examples.Pages
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             var webBuilder = Statik.GetWebBuilder();
             webBuilder.RegisterMvcServices();
             
             var pagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "pages");
             
-            var rootTreeItem = StatikPages.GetPageDirectoryLoader().LoadFiles(new PhysicalFileProvider(pagesDirectory),
+            var rootTreeItem = Statik.GetPageDirectoryLoader().LoadFiles(new PhysicalFileProvider(pagesDirectory),
                 "*.md",
                 "index.md");
 

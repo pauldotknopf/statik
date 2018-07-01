@@ -1,0 +1,13 @@
+@model PageModel
+
+@Html.Raw(Model.Content)
+
+@if (Model.TreeItem.Children.Count > 0)
+{
+    <ul>
+        @foreach (var child in Model.TreeItem.Children)
+        {
+            <li><a href="@Url.Content($"~{child.Path}")">@child.Data.Name</a></li>
+        }
+    </ul>
+}

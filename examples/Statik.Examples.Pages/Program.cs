@@ -1,5 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.FileProviders;
+using Statik.Mvc;
+using Statik.Pages;
 
 namespace Statik.Examples.Pages
 {
@@ -8,8 +12,33 @@ namespace Statik.Examples.Pages
         static async Task Main(string[] args)
         {
             var webBuilder = Statik.GetWebBuilder();
+            webBuilder.RegisterMvcServices();
             
-            // TODO:
+            var pagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "pages");
+            
+            var rootTreeItem = StatikPages.GetPageDirectoryLoader().LoadFiles(new PhysicalFileProvider(pagesDirectory),
+                "index.md",
+                "*.md");
+
+            void RegisterTreeItem(TreeItem<IFileInfo> treeItem)
+            {
+                if (!treeItem.Data.IsDirectory)
+                {
+                    webBuilder.RegisterMvc(treeItem.Path, new
+                    {
+                        controller = "Pages",
+                        action = "Index",
+                        treeItem
+                    });
+                }
+                
+                foreach (var child in treeItem.Children)
+                {
+                    RegisterTreeItem(child);
+                }
+            }
+            
+            RegisterTreeItem(rootTreeItem);
             
             using (var host = webBuilder.BuildWebHost())
             {

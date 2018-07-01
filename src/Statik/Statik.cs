@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Statik.Hosting;
 using Statik.Hosting.Impl;
+using Statik.Pages;
+using Statik.Pages.Impl;
 using Statik.Web;
 using Statik.Web.Impl;
 
@@ -10,13 +12,19 @@ namespace Statik
 {
     public static class Statik
     {
-        private static object _lock = new object();
+        private static readonly object Lock = new object();
         private static IServiceProvider _serviceProvider;
         
         public static IWebBuilder GetWebBuilder()
         {
             EnsureServiceProvider();
             return _serviceProvider.GetRequiredService<IWebBuilder>();
+        }
+
+        public static IPageDirectoryLoader GetPageDirectoryLoader()
+        {
+            EnsureServiceProvider();
+            return _serviceProvider.GetRequiredService<IPageDirectoryLoader>();
         }
 
         public static Task ExportHost(IHost host, string directory)
@@ -30,12 +38,13 @@ namespace Statik
             services.AddSingleton<IHostBuilder, HostBuilder>();
             services.AddSingleton<IHostExporter, HostExporter>();
             services.AddTransient<IWebBuilder, WebBuilder>();
+            services.AddSingleton<IPageDirectoryLoader, PageDirectoryLoader>();
         }
 
         private static void EnsureServiceProvider()
         {
             if (_serviceProvider != null) return;
-            lock (_lock)
+            lock (Lock)
             {
                 if (_serviceProvider != null) return;
                 

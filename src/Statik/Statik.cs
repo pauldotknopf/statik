@@ -10,7 +10,7 @@ namespace Statik
 {
     public static class Statik
     {
-        private static object _lock = new object();
+        private static readonly object Lock = new object();
         private static IServiceProvider _serviceProvider;
         
         public static IWebBuilder GetWebBuilder()
@@ -35,7 +35,7 @@ namespace Statik
         private static void EnsureServiceProvider()
         {
             if (_serviceProvider != null) return;
-            lock (_lock)
+            lock (Lock)
             {
                 if (_serviceProvider != null) return;
                 

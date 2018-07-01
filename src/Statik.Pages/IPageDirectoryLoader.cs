@@ -5,6 +5,6 @@ namespace Statik.Pages
 {
     public interface IPageDirectoryLoader
     {
-        MenuItem<IFileInfo> LoadFiles(IFileProvider fileProvider, Matcher pageMatcher, Matcher indexMatcher);
+        TreeItem<IFileInfo> LoadFiles(IFileProvider fileProvider, Matcher pageMatcher, Matcher indexMatcher);
     }
 }

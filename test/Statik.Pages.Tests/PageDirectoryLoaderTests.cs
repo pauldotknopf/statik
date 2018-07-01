@@ -31,13 +31,13 @@ namespace Statik.Pages.Tests
             File.WriteAllText(Path.Combine(_directory, "file.md"), "content");
             File.WriteAllText(Path.Combine(_directory, "test.txt"), "content");
             
-            var menuItem = _pageDirectoryLoader.LoadFiles(new PhysicalFileProvider(_directory),
+            var treeItem = _pageDirectoryLoader.LoadFiles(new PhysicalFileProvider(_directory),
                 "*.md",
                 "index.md");
 
-            menuItem.Data.Name.Should().Be("index.md");
-            menuItem.Children.Count.Should().Be(1);
-            menuItem.Children[0].Data.Name.Should().Be("file.md");
+            treeItem.Data.Name.Should().Be("index.md");
+            treeItem.Children.Count.Should().Be(1);
+            treeItem.Children[0].Data.Name.Should().Be("file.md");
         }
 
         [Fact]
@@ -49,18 +49,22 @@ namespace Statik.Pages.Tests
             File.WriteAllText(Path.Combine(_directory, "test", "index.md"), "content");
             File.WriteAllText(Path.Combine(_directory, "test", "file2.md"), "content");
             
-            var menuItem = _pageDirectoryLoader.LoadFiles(new PhysicalFileProvider(_directory),
+            var treeItem = _pageDirectoryLoader.LoadFiles(new PhysicalFileProvider(_directory),
                 "*.md",
                 "index.md");
 
-            menuItem.Data.Name.Should().Be("index.md");
-            menuItem.Children.Count.Should().Be(2);
-            menuItem.Children[0].Data.Name.Should().Be("file.md");
-            menuItem.Children[0].Data.IsDirectory.Should().BeFalse();
-            menuItem.Children[1].Data.Name.Should().Be("index.md");
-            menuItem.Children[1].Children.Count.Should().Be(1);
-            menuItem.Children[1].Children[0].Data.Name.Should().Be("file2.md");
-            menuItem.Children[1].Children[0].Data.IsDirectory.Should().BeFalse();
+            treeItem.Path.Should().Be("/");
+            treeItem.Data.Name.Should().Be("index.md");
+            treeItem.Children.Count.Should().Be(2);
+            treeItem.Children[0].Path.Should().Be("/");
+            treeItem.Children[0].Data.Name.Should().Be("file.md");
+            treeItem.Children[0].Data.IsDirectory.Should().BeFalse();
+            treeItem.Children[1].Path.Should().Be("/test");
+            treeItem.Children[1].Data.Name.Should().Be("index.md");
+            treeItem.Children[1].Children.Count.Should().Be(1);
+            treeItem.Children[1].Children[0].Path.Should().Be("/test");
+            treeItem.Children[1].Children[0].Data.Name.Should().Be("file2.md");
+            treeItem.Children[1].Children[0].Data.IsDirectory.Should().BeFalse();
         }
 
         [Fact]
@@ -70,18 +74,16 @@ namespace Statik.Pages.Tests
             Directory.CreateDirectory(Path.Combine(_directory, "child", "grandchild"));
             File.WriteAllText(Path.Combine(_directory, "child", "grandchild", "index.md"), "content");
             
-            var menuItem = _pageDirectoryLoader.LoadFiles(new PhysicalFileProvider(_directory),
+            var treeItem = _pageDirectoryLoader.LoadFiles(new PhysicalFileProvider(_directory),
                 "*.md",
                 "index.md");
 
-            Debug.WriteLine(JsonConvert.SerializeObject(menuItem, Formatting.Indented));
-            
-            menuItem.Data.Name.Should().Be("index.md");
-            menuItem.Children.Count.Should().Be(1);
-            menuItem.Children[0].Data.IsDirectory.Should().Be(true);
-            menuItem.Children[0].Data.Name.Should().Be("child");
-            menuItem.Children[0].Children.Count.Should().Be(1);
-            menuItem.Children[0].Children[0].Data.Name.Should().Be("index.md");
+            treeItem.Data.Name.Should().Be("index.md");
+            treeItem.Children.Count.Should().Be(1);
+            treeItem.Children[0].Data.IsDirectory.Should().Be(true);
+            treeItem.Children[0].Data.Name.Should().Be("child");
+            treeItem.Children[0].Children.Count.Should().Be(1);
+            treeItem.Children[0].Children[0].Data.Name.Should().Be("index.md");
         }
         
         public void Dispose()

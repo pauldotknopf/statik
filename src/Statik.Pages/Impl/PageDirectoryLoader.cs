@@ -8,18 +8,18 @@ namespace Statik.Pages.Impl
 {
     public class PageDirectoryLoader : IPageDirectoryLoader
     {
-        public MenuItem<IFileInfo> LoadFiles(IFileProvider fileProvider, Matcher pageMatcher, Matcher indexMatcher)
+        public TreeItem<IFileInfo> LoadFiles(IFileProvider fileProvider, Matcher pageMatcher, Matcher indexMatcher)
         {
             return LoadDirectory(fileProvider, "/", null, pageMatcher, indexMatcher);
         }
 
-        private MenuItem<IFileInfo> LoadDirectory(IFileProvider fileProvider, string basePath, IFileInfo parentDirectory, Matcher pageMatcher, Matcher indexMatcher)
+        private TreeItem<IFileInfo> LoadDirectory(IFileProvider fileProvider, string basePath, IFileInfo parentDirectory, Matcher pageMatcher, Matcher indexMatcher)
         {
-            MenuItem<IFileInfo> root = null;
+            TreeItem<IFileInfo> root = null;
             var files = fileProvider.GetDirectoryContents(basePath)
                 .ToList();
 
-            var children = new List<MenuItem<IFileInfo>>();
+            var children = new List<TreeItem<IFileInfo>>();
 
             // Load all the files
             foreach (var file in files.Where(x => !x.IsDirectory))
@@ -27,16 +27,16 @@ namespace Statik.Pages.Impl
                 if (indexMatcher.Match(file.Name).HasMatches)
                 {
                     // This is the index page.
-                    root = new MenuItem<IFileInfo>(file);
+                    root = new TreeItem<IFileInfo>(file, basePath);
                 }
                 else if (pageMatcher.Match(file.Name).HasMatches)
                 {
-                    children.Add(new MenuItem<IFileInfo>(file));
+                    children.Add(new TreeItem<IFileInfo>(file, basePath));
                 }
             }
             
             if(root == null)
-                root = new MenuItem<IFileInfo>(parentDirectory);
+                root = new TreeItem<IFileInfo>(parentDirectory, basePath);
             
             root.Children.AddRange(children);
             
@@ -45,10 +45,10 @@ namespace Statik.Pages.Impl
             {
                 var path = new PathString().Add(basePath)
                     .Add("/" + directory.Name);
-                var menuItem = LoadDirectory(fileProvider, path, directory, pageMatcher, indexMatcher);
-                if (menuItem != null)
+                var treeItem = LoadDirectory(fileProvider, path, directory, pageMatcher, indexMatcher);
+                if (treeItem != null)
                 {
-                    root.Children.Add(menuItem);
+                    root.Children.Add(treeItem);
                 }
             }
 

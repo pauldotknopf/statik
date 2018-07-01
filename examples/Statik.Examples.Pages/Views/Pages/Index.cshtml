@@ -7,7 +7,11 @@
     <ul>
         @foreach (var child in Model.TreeItem.Children)
         {
-            <li><a href="@Url.Content($"~{child.Path}")">@child.Data.Name</a></li>
+            <li>
+                <a href="@Url.Content($"~{child.BasePath}/{System.IO.Path.GetFileNameWithoutExtension(child.Data.Name)}")">
+                    @($"{child.BasePath}/{System.IO.Path.GetFileNameWithoutExtension(child.Data.Name)}")
+                </a>
+            </li>
         }
     </ul>
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
+using Newtonsoft.Json;
 using Statik.Mvc;
 using Statik.Pages;
 
@@ -17,19 +19,23 @@ namespace Statik.Examples.Pages
             var pagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "pages");
             
             var rootTreeItem = StatikPages.GetPageDirectoryLoader().LoadFiles(new PhysicalFileProvider(pagesDirectory),
-                "index.md",
-                "*.md");
+                "*.md",
+                "index.md");
 
-            void RegisterTreeItem(TreeItem<IFileInfo> treeItem)
+            Console.Write(JsonConvert.SerializeObject(rootTreeItem, Formatting.Indented));
+            
+            void RegisterTreeItem(PageTreeItem<IFileInfo> treeItem)
             {
                 if (!treeItem.Data.IsDirectory)
                 {
-                    webBuilder.RegisterMvc(treeItem.Path, new
-                    {
-                        controller = "Pages",
-                        action = "Index",
-                        treeItem
-                    });
+                    webBuilder.RegisterMvc(
+                        $"{treeItem.BasePath}/{Path.GetFileNameWithoutExtension(treeItem.Data.Name)}",
+                        new
+                        {
+                            controller = "Pages",
+                            action = "Index",
+                            treeItem
+                        });
                 }
                 
                 foreach (var child in treeItem.Children)

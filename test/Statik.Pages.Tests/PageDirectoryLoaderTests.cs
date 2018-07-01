@@ -36,8 +36,10 @@ namespace Statik.Pages.Tests
                 "index.md");
 
             treeItem.Data.Name.Should().Be("index.md");
+            treeItem.IsIndex.Should().BeTrue();
             treeItem.Children.Count.Should().Be(1);
             treeItem.Children[0].Data.Name.Should().Be("file.md");
+            treeItem.Children[0].IsIndex.Should().BeFalse();
         }
 
         [Fact]
@@ -53,16 +55,16 @@ namespace Statik.Pages.Tests
                 "*.md",
                 "index.md");
 
-            treeItem.Path.Should().Be("/");
+            treeItem.BasePath.Should().Be("");
             treeItem.Data.Name.Should().Be("index.md");
             treeItem.Children.Count.Should().Be(2);
-            treeItem.Children[0].Path.Should().Be("/");
+            treeItem.Children[0].BasePath.Should().Be("");
             treeItem.Children[0].Data.Name.Should().Be("file.md");
             treeItem.Children[0].Data.IsDirectory.Should().BeFalse();
-            treeItem.Children[1].Path.Should().Be("/test");
+            treeItem.Children[1].BasePath.Should().Be("/test");
             treeItem.Children[1].Data.Name.Should().Be("index.md");
             treeItem.Children[1].Children.Count.Should().Be(1);
-            treeItem.Children[1].Children[0].Path.Should().Be("/test");
+            treeItem.Children[1].Children[0].BasePath.Should().Be("/test");
             treeItem.Children[1].Children[0].Data.Name.Should().Be("file2.md");
             treeItem.Children[1].Children[0].Data.IsDirectory.Should().BeFalse();
         }

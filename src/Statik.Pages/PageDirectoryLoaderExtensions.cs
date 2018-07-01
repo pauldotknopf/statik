@@ -6,7 +6,7 @@ namespace Statik.Pages
 {
     public static class PageDirectoryLoaderExtensions
     {
-        public static TreeItem<IFileInfo> LoadFiles(this IPageDirectoryLoader pageDirectoryLoader,
+        public static PageTreeItem<IFileInfo> LoadFiles(this IPageDirectoryLoader pageDirectoryLoader,
             IFileProvider fileProvider,
             string pageGlob,
             string indexGlob)

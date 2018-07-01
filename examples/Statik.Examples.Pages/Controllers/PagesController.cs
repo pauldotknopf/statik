@@ -12,7 +12,7 @@ namespace Statik.Examples.Pages.Controllers
     {
         public async Task<ActionResult> Index()
         {
-            var treeItem = RouteData.Values["treeItem"] as TreeItem<IFileInfo>;
+            var treeItem = RouteData.Values["treeItem"] as PageTreeItem<IFileInfo>;
             if(treeItem == null) throw new InvalidOperationException();
             
             string content = null;

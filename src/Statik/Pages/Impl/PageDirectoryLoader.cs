@@ -72,6 +72,11 @@ namespace Statik.Pages.Impl
                 }
             }
 
+            foreach (var child in root.Children)
+            {
+                child.Parent = root;
+            }
+
             return root;
         }
     }

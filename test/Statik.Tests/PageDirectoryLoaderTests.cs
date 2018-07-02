@@ -58,6 +58,24 @@ namespace Statik.Tests
         }
 
         [Fact]
+        public void Can_set_parent_node_properly()
+        {
+            File.WriteAllText(Path.Combine(_directory, "index.md"), "content");
+            Directory.CreateDirectory(Path.Combine(_directory, "child", "grandchild"));
+            File.WriteAllText(Path.Combine(_directory, "child", "grandchild", "index.md"), "content");
+            
+            var treeItem = _pageDirectoryLoader.LoadFiles(new PhysicalFileProvider(_directory),
+                "*.md",
+                "index.md");
+
+            treeItem.Parent.Should().BeNull();
+            treeItem.Children.Count.Should().Be(1);
+            treeItem.Children[0].Parent.Should().Be(treeItem);
+            treeItem.Children[0].Children.Count.Should().Be(1);
+            treeItem.Children[0].Children[0].Parent.Should().Be(treeItem.Children[0]);
+        }
+
+        [Fact]
         public void Can_create_empty_node_if_intermediate_child_has_no_page()
         {
             File.WriteAllText(Path.Combine(_directory, "index.md"), "content");

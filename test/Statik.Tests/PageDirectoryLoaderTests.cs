@@ -20,22 +20,25 @@ namespace Statik.Tests
         }
 
         [Fact]
-        public void Can_load_with_index_set_properly()
+        public void Can_load_with_path_set_correctly()
         {
             File.WriteAllText(Path.Combine(_directory, "index.md"), "content");
             File.WriteAllText(Path.Combine(_directory, "file.md"), "content");
-            Directory.CreateDirectory(Path.Combine(_directory, "test"));
-            File.WriteAllText(Path.Combine(_directory, "test", "index.md"), "content");
-            File.WriteAllText(Path.Combine(_directory, "test", "file2.md"), "content");
+            Directory.CreateDirectory(Path.Combine(_directory, "test", "nested"));
+            File.WriteAllText(Path.Combine(_directory, "test", "nested", "index.md"), "content");
+            File.WriteAllText(Path.Combine(_directory, "test", "nested", "file2.md"), "content");
             
             var treeItem = _pageDirectoryLoader.LoadFiles(new PhysicalFileProvider(_directory),
                 "*.md",
                 "index.md");
 
-            treeItem.IsIndex.Should().BeTrue();
-            treeItem.Children[0].IsIndex.Should().BeFalse();
-            treeItem.Children[1].IsIndex.Should().BeTrue();
-            treeItem.Children[1].Children[0].IsIndex.Should().BeFalse();
+            treeItem.FilePath.Should().Be("/index.md");
+            treeItem.Children[0].FilePath.Should().Be("/file.md");
+            treeItem.Children[1].FilePath.Should().Be("/test");
+            treeItem.Children[1].Children.Count.Should().Be(1);
+            treeItem.Children[1].Children[0].FilePath.Should().Be("/test/nested/index.md");
+            treeItem.Children[1].Children[0].Children.Count.Should().Be(1);
+            treeItem.Children[1].Children[0].Children[0].FilePath.Should().Be("/test/nested/file2.md");
         }
         
         [Fact]

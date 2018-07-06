@@ -1,5 +1,3 @@
-#load "nuget:simple-targets-csx, 6.0.0"
-
 public static class Log
 {
     private static readonly Dictionary<MessageType, Func<bool, string>> colors = new Dictionary<MessageType, Func<bool, string>>

@@ -33,7 +33,7 @@ namespace Statik.Pages.Impl
                 if (options.IndexPageMatcher != null && options.IndexPageMatcher.Match(file.Name).HasMatches)
                 {
                     // This is the index page.
-                    root = new PageTreeItem<IFileInfo>(file, basePath, true);
+                    root = new PageTreeItem<IFileInfo>(file, basePath, Path.Combine(basePath, file.Name));
                 }
                 else
                 {
@@ -45,18 +45,18 @@ namespace Statik.Pages.Impl
                     {
                         if (options.NormalPageMatcher.Match(file.Name).HasMatches)
                         {
-                            children.Add(new PageTreeItem<IFileInfo>(file, path, false));
+                            children.Add(new PageTreeItem<IFileInfo>(file, path, Path.Combine(basePath, file.Name)));
                         }
                     }
                     else
                     {
-                        children.Add(new PageTreeItem<IFileInfo>(file, path, false));
+                        children.Add(new PageTreeItem<IFileInfo>(file, path, Path.Combine(basePath, file.Name)));
                     }
                 }
             }
             
             if(root == null)
-                root = new PageTreeItem<IFileInfo>(parentDirectory, basePath, false);
+                root = new PageTreeItem<IFileInfo>(parentDirectory, basePath, basePath);
             
             root.Children.AddRange(children);
             

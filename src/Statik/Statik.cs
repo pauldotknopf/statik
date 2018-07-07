@@ -18,7 +18,7 @@ namespace Statik
         public static IWebBuilder GetWebBuilder()
         {
             EnsureServiceProvider();
-            return _serviceProvider.GetRequiredService<IWebBuilder>();
+            return _serviceProvider.GetRequiredService<IWebBuilderFactory>().CreateWebBuilder();
         }
 
         public static IPageDirectoryLoader GetPageDirectoryLoader()
@@ -37,7 +37,7 @@ namespace Statik
         {
             services.AddSingleton<IHostBuilder, HostBuilder>();
             services.AddSingleton<IHostExporter, HostExporter>();
-            services.AddTransient<IWebBuilder, WebBuilder>();
+            services.AddSingleton<IWebBuilderFactory, WebBuilderFactory>();
             services.AddSingleton<IPageDirectoryLoader, PageDirectoryLoader>();
         }
 

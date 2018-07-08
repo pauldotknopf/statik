@@ -14,22 +14,22 @@ namespace Statik.Files
 {
     public static class WebBuilderExtensions
     {
-        public static void RegisterDirectory(this IWebBuilder webBuilder, string directory)
+        public static void RegisterDirectory(this IWebBuilder webBuilder, string directory, BuildStateDelegate state = null)
         {
             RegisterFileProvider(webBuilder, new PhysicalFileProvider(directory));
         }
         
-        public static void RegisterDirectory(this IWebBuilder webBuilder, PathString prefix, string directory)
+        public static void RegisterDirectory(this IWebBuilder webBuilder, PathString prefix, string directory, BuildStateDelegate state = null)
         {
             RegisterFileProvider(webBuilder, prefix, new PhysicalFileProvider(directory));
         }
         
-        public static void RegisterFileProvider(this IWebBuilder webBuilder, IFileProvider fileProvider)
+        public static void RegisterFileProvider(this IWebBuilder webBuilder, IFileProvider fileProvider, BuildStateDelegate state = null)
         {
             RegisterFileProvider(webBuilder, "/", fileProvider);
         }
         
-        public static void RegisterFileProvider(this IWebBuilder webBuilder, PathString prefix, IFileProvider fileProvider)
+        public static void RegisterFileProvider(this IWebBuilder webBuilder, PathString prefix, IFileProvider fileProvider, BuildStateDelegate state = null)
         {
             var contents = fileProvider.GetDirectoryContents("/");
             if(contents == null || !contents.Exists) return;
@@ -40,8 +40,7 @@ namespace Statik.Files
             }
         }
 
-        private static void RegisterFileInfo(this IWebBuilder webBuilder, IFileProvider fileProvider, PathString prefix,
-            string basePath, IFileInfo fileInfo)
+        private static void RegisterFileInfo(this IWebBuilder webBuilder, IFileProvider fileProvider, PathString prefix, string basePath, IFileInfo fileInfo, BuildStateDelegate state = null)
         {
             if (fileInfo.IsDirectory)
             {
@@ -59,32 +58,37 @@ namespace Statik.Files
             }
             else
             {
-                var path = new PathString().Add(prefix)
-                    .Add(basePath)
-                    .Add("/" + fileInfo.Name);
+                var filePath = Path.Combine(basePath, fileInfo.Name);
+                var requestPath = new PathString().Add(prefix)
+                    .Add(filePath);
 
-                webBuilder.Register(path.Value, async context =>
-                {
-                    var env = context.RequestServices.GetRequiredService<IHostingEnvironment>();
-
-                    var options = Options.Create(new StaticFileOptions());
-                    options.Value.FileProvider = fileProvider;
-
-                    var loggerFactory = context.RequestServices.GetRequiredService<ILoggerFactory>();
-                    var middleware = new StaticFileMiddleware(_ => Task.CompletedTask, env, options, loggerFactory);
-
-                    var oldPath = context.Request.Path;
-                    try
+                var builtState = state?.Invoke(prefix, requestPath, filePath, fileInfo, fileProvider);
+                
+                webBuilder.Register(requestPath, async context =>
                     {
-                        context.Request.Path = Path.Combine(basePath, fileInfo.Name);
-                        await middleware.Invoke(context);
-                    }
-                    finally
-                    {
-                        context.Request.Path = oldPath;
-                    }
-                });
+                        var env = context.RequestServices.GetRequiredService<IHostingEnvironment>();
+    
+                        var options = Options.Create(new StaticFileOptions());
+                        options.Value.FileProvider = fileProvider;
+    
+                        var loggerFactory = context.RequestServices.GetRequiredService<ILoggerFactory>();
+                        var middleware = new StaticFileMiddleware(_ => Task.CompletedTask, env, options, loggerFactory);
+    
+                        var oldPath = context.Request.Path;
+                        try
+                        {
+                            context.Request.Path = filePath;
+                            await middleware.Invoke(context);
+                        }
+                        finally
+                        {
+                            context.Request.Path = oldPath;
+                        }
+                    },
+                    builtState);
             }
         }
+        
+        public delegate object BuildStateDelegate(string requestPrefix, string requestFullPath, string filePath, IFileInfo file, IFileProvider fileProvider);
     }
 }

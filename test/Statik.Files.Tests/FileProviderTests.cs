@@ -38,19 +38,19 @@ namespace Statik.Files.Tests
                 
                 var webBuilder = new Mock<IWebBuilder>();
                 
-                webBuilder.Setup(x => x.Register("/file1.txt", It.IsAny<Func<HttpContext, Task>>()));
-                webBuilder.Setup(x => x.Register("/file2.txt", It.IsAny<Func<HttpContext, Task>>()));
-                webBuilder.Setup(x => x.Register("/nested/file3.txt", It.IsAny<Func<HttpContext, Task>>()));
-                webBuilder.Setup(x => x.Register("/nested/file4.txt", It.IsAny<Func<HttpContext, Task>>()));
-                webBuilder.Setup(x => x.Register("/nested/nested2/file5.txt", It.IsAny<Func<HttpContext, Task>>()));
+                webBuilder.Setup(x => x.Register("/file1.txt", It.IsAny<Func<HttpContext, Task>>(), null));
+                webBuilder.Setup(x => x.Register("/file2.txt", It.IsAny<Func<HttpContext, Task>>(), null));
+                webBuilder.Setup(x => x.Register("/nested/file3.txt", It.IsAny<Func<HttpContext, Task>>(), null));
+                webBuilder.Setup(x => x.Register("/nested/file4.txt", It.IsAny<Func<HttpContext, Task>>(), null));
+                webBuilder.Setup(x => x.Register("/nested/nested2/file5.txt", It.IsAny<Func<HttpContext, Task>>(), null));
                 
                 webBuilder.Object.RegisterDirectory(testDirectory.Directory);
                 
-                webBuilder.Verify(x => x.Register("/file1.txt", It.IsAny<Func<HttpContext, Task>>()), Times.Exactly(1));
-                webBuilder.Verify(x => x.Register("/file2.txt", It.IsAny<Func<HttpContext, Task>>()), Times.Exactly(1));
-                webBuilder.Verify(x => x.Register("/nested/file3.txt", It.IsAny<Func<HttpContext, Task>>()), Times.Exactly(1));
-                webBuilder.Verify(x => x.Register("/nested/file4.txt", It.IsAny<Func<HttpContext, Task>>()), Times.Exactly(1));
-                webBuilder.Verify(x => x.Register("/nested/nested2/file5.txt", It.IsAny<Func<HttpContext, Task>>()), Times.Exactly(1));
+                webBuilder.Verify(x => x.Register("/file1.txt", It.IsAny<Func<HttpContext, Task>>(), null), Times.Exactly(1));
+                webBuilder.Verify(x => x.Register("/file2.txt", It.IsAny<Func<HttpContext, Task>>(), null), Times.Exactly(1));
+                webBuilder.Verify(x => x.Register("/nested/file3.txt", It.IsAny<Func<HttpContext, Task>>(), null), Times.Exactly(1));
+                webBuilder.Verify(x => x.Register("/nested/file4.txt", It.IsAny<Func<HttpContext, Task>>(), null), Times.Exactly(1));
+                webBuilder.Verify(x => x.Register("/nested/nested2/file5.txt", It.IsAny<Func<HttpContext, Task>>(), null), Times.Exactly(1));
             }
         }
         

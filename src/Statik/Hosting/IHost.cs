@@ -9,5 +9,7 @@ namespace Statik.Hosting
         IReadOnlyCollection<string> Paths { get; }
 
         HttpClient CreateClient();
+
+        IServiceProvider ServiceProvider { get; }
     }
 }

@@ -70,6 +70,8 @@ namespace Statik.Hosting.Impl
                 return wrapper;
             }
 
+            public IServiceProvider ServiceProvider => _webHost.Services;
+
             public void Listen()
             {
                 _webHost.Start();
@@ -117,6 +119,8 @@ namespace Statik.Hosting.Impl
                 wrapper.BaseAddress = inner.BaseAddress;
                 return wrapper;
             }
+
+            public IServiceProvider ServiceProvider => _testServer.Host.Services;
 
             public void Dispose()
             {

@@ -22,9 +22,9 @@ namespace Statik.Web.Impl
             _hostBuilder = hostBuilder;
         }
 
-        public void Register(string path, Func<HttpContext, Task> action)
+        public void Register(string path, Func<HttpContext, Task> action, object state)
         {
-            _pages.Add(path, new Page(action));
+            _pages.Add(path, new Page(path, action, state));
         }
 
         public void RegisterServices(Action<IServiceCollection> action)
@@ -53,17 +53,7 @@ namespace Statik.Web.Impl
                     _serviceActions.ToList()));
         }
 
-        class Page
-        {
-            public Page(Func<HttpContext, Task> action)
-            {
-                Action = action;
-            }
-
-            public Func<HttpContext, Task> Action { get; }
-        }
-
-        class HostModule : IHostModule
+        class HostModule : IHostModule, IPageRegistry
         {
             readonly PathString _appBase;
             readonly Dictionary<string, Page> _pages;
@@ -137,6 +127,7 @@ namespace Statik.Web.Impl
 
             public void ConfigureServices(IServiceCollection services)
             {
+                services.AddSingleton<IPageRegistry>(this);
                 foreach(var serviceAction in _serviceActions)
                 {
                     serviceAction(services);
@@ -144,6 +135,76 @@ namespace Statik.Web.Impl
             }
 
             public IReadOnlyCollection<string> Paths { get; }
+
+            public IReadOnlyCollection<string> GetPaths()
+            {
+                return Paths;
+            }
+
+            public Page GetPage(string path)
+            {
+                return _pages.TryGetValue(path, out Page page) ? page : null;
+            }
+
+            public Page FindOne(PageMatchDelegate match)
+            {
+                foreach (var value in _pages.Values)
+                {
+                    if (match(value)) return value;
+                }
+
+                return null;
+            }
+
+            public async Task<Page> FindOne(PageMatchDelegateAsync match)
+            {
+                foreach (var value in _pages.Values)
+                {
+                    if (await match(value)) return value;
+                }
+
+                return null;
+            }
+
+            public List<Page> FindMany(PageMatchDelegate match)
+            {
+                var result = new List<Page>();
+                
+                foreach (var value in _pages.Values)
+                {
+                    if(match(value)) result.Add(value);
+                }
+
+                return result;
+            }
+
+            public async Task<List<Page>> FindMany(PageMatchDelegateAsync match)
+            {
+                var result = new List<Page>();
+                
+                foreach (var value in _pages.Values)
+                {
+                    if(await match(value)) result.Add(value);
+                }
+
+                return result;
+            }
+
+            public void ForEach(PageActionDelegate action)
+            {
+                foreach (var value in _pages.Values)
+                {
+                    action(value);
+                }
+            }
+
+            public async Task ForEach(PageActionDelegateAsync action)
+            {
+                foreach (var value in _pages.Values)
+                {
+                    await action(value);
+                }
+            }
         }
     }
 }

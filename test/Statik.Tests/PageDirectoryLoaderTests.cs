@@ -97,6 +97,20 @@ namespace Statik.Tests
             treeItem.Children[0].Children[0].Path.Should().Be("/child/grandchild");
         }
         
+        [Fact]
+        public void Can_ignore_directories_with_no_files()
+        {
+            File.WriteAllText(Path.Combine(_directory, "index.md"), "content");
+            Directory.CreateDirectory(Path.Combine(_directory, "child", "grandchild"));
+            
+            var treeItem = _pageDirectoryLoader.LoadFiles(new PhysicalFileProvider(_directory),
+                "*.md",
+                "index.md");
+
+            treeItem.Path.Should().Be("/");
+            treeItem.Children.Should().HaveCount(0);
+        }
+        
         public void Dispose()
         {
             Directory.Delete(_directory, true);

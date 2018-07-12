@@ -68,6 +68,11 @@ namespace Statik.Pages.Impl
                 var treeItem = LoadDirectory(fileProvider, path, directory, options);
                 if (treeItem != null)
                 {
+                    if ((treeItem.Data == null || treeItem.Data.IsDirectory) && treeItem.Children.Count == 0)
+                    {
+                        continue;
+                    }
+                    
                     root.Children.Add(treeItem);
                 }
             }

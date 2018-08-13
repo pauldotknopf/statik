@@ -1,4 +1,4 @@
-#r "nuget:Bullseye, 1.0.0-rc.4"
+#r "nuget:Bullseye, 1.1.0-rc.2"
 #load "process.csx"
 #load "path.csx"
 #load "runner.csx"
@@ -18,30 +18,30 @@ Log.Info($"Version: {gitversion.FullVersion}");
 
 var commandBuildArgs = $"--configuration {options.Configuration} --version-suffix \"{gitversion.PreReleaseTag}\"";
 
-Add("clean", () =>
+Target("clean", () =>
 {
     Path.CleanDirectory(Path.Expand("./output"));
 });
 
-Add("build", () =>
+Target("build", () =>
 {
     Process.Run($"dotnet build Statik.sln {commandBuildArgs}");
 });
 
-Add("test", () =>
+Target("test", () =>
 {
     Process.Run($"dotnet test test/Statik.Tests/");
     Process.Run($"dotnet test test/Statik.Files.Tests/");
     Process.Run($"dotnet test test/Statik.Mvc.Tests/");
 });
 
-Add("deploy", DependsOn("clean"), () =>
+Target("deploy", DependsOn("clean"), () =>
 {
     // Deploy our nuget packages.
     Process.Run($"dotnet pack --output {Path.Expand("./output")} {commandBuildArgs}");
 });
 
-Add("update-version", () =>
+Target("update-version", () =>
 {
     if(Path.FileExists("./build/version.props")) Path.DeleteFile("./build/version.props");
     Path.WriteFile("./build/version.props",
@@ -52,7 +52,7 @@ $@"<Project>
 </Project>");
 });
 
-Add("publish", () =>
+Target("publish", () =>
 {
     if(Travis.IsTravis)
     {
@@ -89,11 +89,11 @@ Add("publish", () =>
     }
 });
 
-Add("ci", DependsOn("update-version", "test", "deploy", "publish"), () =>
+Target("ci", DependsOn("update-version", "test", "deploy", "publish"), () =>
 {
     
 });
 
-Add("default", DependsOn("build"));
+Target("default", DependsOn("build"));
 
-Run(new[] { options.Target });
+RunTargets(new[] { options.Target });

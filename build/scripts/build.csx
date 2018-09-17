@@ -1,4 +1,4 @@
-#r "nuget:Bullseye, 1.1.0-rc.2"
+#r "nuget:Bullseye, 1.2.0"
 #load "process.csx"
 #load "path.csx"
 #load "runner.csx"

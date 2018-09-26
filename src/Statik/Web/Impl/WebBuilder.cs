@@ -53,6 +53,16 @@ namespace Statik.Web.Impl
                     _serviceActions.ToList()));
         }
 
+        class PageAccessor : IPageAccessor
+        {
+            public PageAccessor(Page page)
+            {
+                Page = page;
+            }
+            
+            public Page Page { get; }
+        }
+        
         class HostModule : IHostModule, IPageRegistry
         {
             readonly PathString _appBase;
@@ -78,7 +88,9 @@ namespace Statik.Web.Impl
                     {
                         _pages.TryGetValue(c.Request.Path, out var page);
                         if (page == null) return false;
+                        context.Items["_statikPageAccessor"] = new PageAccessor(page);
                         await page.Action(context);
+                        context.Items["_statikPageAccessor"] = null;
                         return true;
                     }
 

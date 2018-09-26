@@ -22,8 +22,6 @@ namespace Statik.Examples.Pages
                 "*.md",
                 "index.md");
 
-            Console.Write(JsonConvert.SerializeObject(rootTreeItem, Formatting.Indented));
-            
             void RegisterTreeItem(PageTreeItem<IFileInfo> treeItem)
             {
                 if (!treeItem.Data.IsDirectory)

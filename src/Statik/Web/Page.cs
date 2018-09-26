@@ -6,7 +6,7 @@ namespace Statik.Web
 {
     public class Page
     {
-        public Page(string path, Func<HttpContext, Task> action, object state)
+        internal Page(string path, Func<HttpContext, Task> action, object state)
         {
             Path = path;
             Action = action;
@@ -15,8 +15,8 @@ namespace Statik.Web
 
         public string Path { get; }
             
-        public Func<HttpContext, Task> Action { get; }
-            
+        internal Func<HttpContext, Task> Action { get; }
+        
         public object State { get; }
     }
 }

@@ -8,7 +8,7 @@ namespace Statik.Web
 {
     public interface IWebBuilder
     {
-        void Register(string path, Func<HttpContext, Task> action, object state = null);
+        void Register(string path, Func<HttpContext, Task> action, object state = null, bool extractExactPath = false);
 
         void RegisterServices(Action<IServiceCollection> action);
         

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Statik.Web;
 
 namespace Statik.Hosting
 {
@@ -11,6 +12,6 @@ namespace Statik.Hosting
 
         void ConfigureServices(IServiceCollection services);
 
-        IReadOnlyCollection<string> Paths { get; }
+        IReadOnlyCollection<Page> Pages { get; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Statik.Web;
 
 namespace Statik.Hosting.Impl
 {
@@ -23,21 +24,24 @@ namespace Statik.Hosting.Impl
                 await Task.Run(() => Directory.Delete(directoryToDelete, true));
             }
 
-            foreach(var path in host.Paths)
+            foreach(var page in host.Pages)
             {
                 using(var client = host.CreateClient())
                 {
-                    var destination = $"{destinationDirectory}{path}";
-                    if(string.IsNullOrEmpty(Path.GetExtension(destination)))
+                    var destination = $"{destinationDirectory}{page.Path}";
+                    if (!page.ExtractExactPath)
                     {
-                        destination += "/index.html";
+                        if (string.IsNullOrEmpty(Path.GetExtension(destination)))
+                        {
+                            destination += "/index.html";
+                        }
                     }
-                    await SaveUrlToFile(client, path, destination);
+                    await SaveUrlToFile(client, page, destination);
                 }
             }
         }
 
-        private async Task SaveUrlToFile(HttpClient client, string url, string file)
+        private async Task SaveUrlToFile(HttpClient client, Page page, string file)
         {
             // Ensure the file's parent directories are created.
             var parentDirectory = Path.GetDirectoryName(file);
@@ -48,7 +52,7 @@ namespace Statik.Hosting.Impl
                     await Task.Run(() => Directory.CreateDirectory(parentDirectory));
                 }
             }
-            var response = await client.GetAsync(url);
+            var response = await client.GetAsync(page.Path);
             response.EnsureSuccessStatusCode();
             using(var requestStream = await response.Content.ReadAsStreamAsync())
             {

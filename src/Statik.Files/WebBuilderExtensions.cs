@@ -95,7 +95,9 @@ namespace Statik.Files
                             context.Request.Path = oldPath;
                         }
                     },
-                    builtState);
+                    builtState,
+                    /*don't convert "/file" to "/file/index.html"*/
+                    true);
             }
         }
     }

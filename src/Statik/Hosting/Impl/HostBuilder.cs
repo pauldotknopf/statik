@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Statik.Web;
 
 namespace Statik.Hosting.Impl
 {
@@ -39,7 +40,7 @@ namespace Statik.Hosting.Impl
             {
                 _appBase = appBase;
                 _port = port;
-                Paths = new ReadOnlyCollection<string>(modules.SelectMany(x => x.Paths).ToList());
+                Pages = new ReadOnlyCollection<Page>(modules.SelectMany(x => x.Pages).ToList());
                 _webHost = WebHost.CreateDefaultBuilder(new string[]{})
                     .UseUrls($"http://*:{port}")
                     .UseSetting(WebHostDefaults.ApplicationKey,  Assembly.GetEntryAssembly().GetName().Name)
@@ -58,7 +59,7 @@ namespace Statik.Hosting.Impl
                     .Build();
             }
 
-            public IReadOnlyCollection<string> Paths { get; }
+            public IReadOnlyCollection<Page> Pages { get; }
 
             public HttpClient CreateClient()
             {
@@ -93,7 +94,7 @@ namespace Statik.Hosting.Impl
                 List<IHostModule> modules)
             {
                 _appBase = appBase;
-                Paths = new ReadOnlyCollection<string>(modules.SelectMany(x => x.Paths).ToList());
+                Pages = new ReadOnlyCollection<Page>(modules.SelectMany(x => x.Pages).ToList());
                 _testServer = new TestServer(new WebHostBuilder()
                     .UseSetting(WebHostDefaults.ApplicationKey,  Assembly.GetEntryAssembly().GetName().Name)
                     .ConfigureLogging(factory => {
@@ -110,7 +111,7 @@ namespace Statik.Hosting.Impl
                     }));
             }
 
-            public IReadOnlyCollection<string> Paths { get; }
+            public IReadOnlyCollection<Page> Pages { get; }
 
             public HttpClient CreateClient()
             {

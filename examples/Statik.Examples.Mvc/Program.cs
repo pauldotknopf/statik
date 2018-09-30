@@ -6,7 +6,7 @@ namespace Statik.Examples.Mvc
 {
     class Program
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             var webBuilder = Statik.GetWebBuilder();
             

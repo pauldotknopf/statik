@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -22,9 +22,9 @@ namespace Statik.Web.Impl
             _hostBuilder = hostBuilder;
         }
 
-        public void Register(string path, Func<HttpContext, Task> action, object state)
+        public void Register(string path, Func<HttpContext, Task> action, object state, bool extractExactPath)
         {
-            _pages.Add(path, new Page(path, action, state));
+            _pages.Add(path, new Page(path, action, state, extractExactPath));
         }
 
         public void RegisterServices(Action<IServiceCollection> action)
@@ -77,7 +77,7 @@ namespace Statik.Web.Impl
                 _appBase = appBase;
                 _pages = pages;
                 _serviceActions = serviceActions;
-                Paths = new ReadOnlyCollection<string>(_pages.Keys.ToList());
+                Pages = new ReadOnlyCollection<Page>(_pages.Values.ToList());
             }
 
             public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -146,11 +146,11 @@ namespace Statik.Web.Impl
                 }
             }
 
-            public IReadOnlyCollection<string> Paths { get; }
+            public IReadOnlyCollection<Page> Pages { get; }
 
             public IReadOnlyCollection<string> GetPaths()
             {
-                return Paths;
+                return new ReadOnlyCollection<string>(Pages.Select(x => x.Path).ToList());
             }
 
             public Page GetPage(string path)

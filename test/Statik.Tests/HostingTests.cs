@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Statik.Hosting;
 using Statik.Hosting.Impl;
+using Statik.Web;
 using Xunit;
 
 namespace Statik.Tests
@@ -64,7 +65,10 @@ namespace Statik.Tests
                     });
                 });
             hostModule.Setup(x => x.ConfigureServices(It.IsAny<IServiceCollection>()));
-            hostModule.Setup(x => x.Paths).Returns(new ReadOnlyCollection<string>(new List<string>{ "/test" }));
+            hostModule.Setup(x => x.Pages).Returns(new ReadOnlyCollection<Page>(new List<Page>
+            {
+                new Page("/test", null, null, false)
+            }));
             return hostModule.Object;
         }
     }

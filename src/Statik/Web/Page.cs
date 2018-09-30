@@ -6,11 +6,15 @@ namespace Statik.Web
 {
     public class Page
     {
-        internal Page(string path, Func<HttpContext, Task> action, object state)
+        internal Page(string path,
+            Func<HttpContext, Task> action,
+            object state,
+            bool extractExactPath)
         {
             Path = path;
             Action = action;
             State = state;
+            ExtractExactPath = extractExactPath;
         }
 
         public string Path { get; }
@@ -18,5 +22,7 @@ namespace Statik.Web
         internal Func<HttpContext, Task> Action { get; }
         
         public object State { get; }
+        
+        public bool ExtractExactPath { get; }
     }
 }

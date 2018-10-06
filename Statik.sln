@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-#
+# 
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9FD852C3-67B7-46C0-9834-553A3E581B70}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statik", "src\Statik\Statik.csproj", "{748296CB-88BD-43CA-8C67-FC804487139E}"
@@ -24,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statik.Examples.Mvc", "examples\Statik.Examples.Mvc\Statik.Examples.Mvc.csproj", "{3EF13426-0E60-4819-B5A1-E89A169CDFA3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statik.Examples.Pages", "examples\Statik.Examples.Pages\Statik.Examples.Pages.csproj", "{33E2DB92-C979-4669-914B-6D707885B401}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statik.Markdown", "src\Statik.Markdown\Statik.Markdown.csproj", "{4528D702-0EE9-462B-9DCE-D34886B9885A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,10 @@ Global
 		{33E2DB92-C979-4669-914B-6D707885B401}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33E2DB92-C979-4669-914B-6D707885B401}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33E2DB92-C979-4669-914B-6D707885B401}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4528D702-0EE9-462B-9DCE-D34886B9885A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4528D702-0EE9-462B-9DCE-D34886B9885A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4528D702-0EE9-462B-9DCE-D34886B9885A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4528D702-0EE9-462B-9DCE-D34886B9885A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{748296CB-88BD-43CA-8C67-FC804487139E} = {9FD852C3-67B7-46C0-9834-553A3E581B70}
@@ -78,5 +84,6 @@ Global
 		{6E349214-6AF4-474D-B270-F15C7EB03A47} = {CE9B8FB2-637F-4B0C-85C3-4C9C541F325A}
 		{3EF13426-0E60-4819-B5A1-E89A169CDFA3} = {CE9B8FB2-637F-4B0C-85C3-4C9C541F325A}
 		{33E2DB92-C979-4669-914B-6D707885B401} = {CE9B8FB2-637F-4B0C-85C3-4C9C541F325A}
+		{4528D702-0EE9-462B-9DCE-D34886B9885A} = {9FD852C3-67B7-46C0-9834-553A3E581B70}
 	EndGlobalSection
 EndGlobal

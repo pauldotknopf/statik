@@ -10,7 +10,24 @@ namespace Statik
     {
         public static string ConvertStringToSlug(string value)
         {
-            return Regex.Replace(value, @"[^A-Za-z0-9_\.~]+", "-");
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentOutOfRangeException(nameof(value));
+            }
+            
+            var result = Regex.Replace(value, @"[^A-Za-z0-9_~]+", "-");
+
+            if (result.EndsWith("-"))
+            {
+                result = result.Substring(0, result.Length - 1);
+            }
+
+            if (result.StartsWith("-"))
+            {
+                result = result.Substring(1);
+            }
+            
+            return result;
         }
         
         public static string ResolvePathPart(string path, string relative)

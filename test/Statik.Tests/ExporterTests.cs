@@ -48,6 +48,7 @@ namespace Statik.Tests
             }
 
             File.Exists(Path.Combine(_directory, "test.css")).Should().BeTrue();
+            File.ReadAllText(Path.Combine(_directory, "test.css")).Should().Be("test content");
         }
         
         [Fact]
@@ -62,6 +63,7 @@ namespace Statik.Tests
             }
 
             File.Exists(Path.Combine(_directory, "test")).Should().BeTrue();
+            File.ReadAllText(Path.Combine(_directory, "test")).Should().Be("test content");
         }
 
         public void Dispose()

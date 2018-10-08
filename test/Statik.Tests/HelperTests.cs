@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Xunit;
 
 namespace Statik.Tests
@@ -15,8 +16,17 @@ namespace Statik.Tests
         [InlineData("/test?#ignored", "test2#preserved", "/test/test2#preserved")]
         public void Can_resolve_relative_path(string input, string relative, string expected)
         {
-            var result = StatikHelpers.ResolvePathPart(input, relative);
-            Assert.Equal(expected, result);
+            StatikHelpers.ResolvePathPart(input, relative).Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData("test", "test")]
+        [InlineData("--test--", "test")]
+        [InlineData(".test.", "test")]
+        [InlineData("test----test", "test-test")]
+        public void Can_convert_string_to_slug(string input, string expected)
+        {
+            StatikHelpers.ConvertStringToSlug(input).Should().Be(expected);
         }
     }
 }

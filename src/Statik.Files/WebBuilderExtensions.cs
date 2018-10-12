@@ -80,6 +80,7 @@ namespace Statik.Files
     
                         var statileFileOptions = Options.Create(new StaticFileOptions());
                         statileFileOptions.Value.FileProvider = fileProvider;
+                        statileFileOptions.Value.ServeUnknownFileTypes = true;
     
                         var loggerFactory = context.RequestServices.GetRequiredService<ILoggerFactory>();
                         var middleware = new StaticFileMiddleware(_ => Task.CompletedTask, env, statileFileOptions, loggerFactory);

@@ -66,6 +66,28 @@ namespace Statik.Tests
             File.ReadAllText(Path.Combine(_directory, "test")).Should().Be("test content");
         }
 
+        [Fact]
+        public async Task Can_export_parallel()
+        {
+            for (var x = 0; x < 40; x++)
+            {
+                var _ = x;
+                _webBuilder.Register($"/test{_}.txt", async context => { await context.Response.WriteAsync($"test content {_}"); });
+            }
+            
+            using (var host = _webBuilder.BuildVirtualHost())
+            {
+                await _hostExporter.ExportParallel(host, _directory);
+            }
+            
+            for (var x = 0; x < 40; x++)
+            {
+                File.Exists(Path.Combine(_directory, $"test{x}.txt")).Should().BeTrue();
+                File.ReadAllText(Path.Combine(_directory, $"test{x}.txt")).Should().Be($"test content {x}");
+            }
+        }
+        
+
         public void Dispose()
         {
             Directory.Delete(_directory, true);

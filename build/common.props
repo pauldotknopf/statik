@@ -1,8 +1,11 @@
 <Project>
-  <Import Project="version.props" />
-
-  <PropertyGroup>
-    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
-  </PropertyGroup>
-
+    <Import Project="version.props" />
+    <PropertyGroup>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Authors>pauldotknopf</Authors>
+        <PackageDescription>A dead simple static site generator, with no features, for .NET.</PackageDescription>
+        <Summary>A dead simple static site generator, with no features, for .NET.</Summary>
+        <RepositoryUrl>https://github.com/pauldotknopf/statik</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/pauldotknopf/statik</PackageProjectUrl>
+    </PropertyGroup>
 </Project>

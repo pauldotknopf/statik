@@ -5,7 +5,6 @@ A **dead simple** static site generator, with **no features**, for .NET.
 [![Statik](https://img.shields.io/nuget/v/Statik.svg?style=flat-square&label=Statik)](http://www.nuget.org/packages/Statik/)
 [![Statik.Mvc](https://img.shields.io/nuget/v/Statik.Mvc.svg?style=flat-square&label=Statik.Mvc)](http://www.nuget.org/packages/Statik.Mvc/)
 [![Statik.Files](https://img.shields.io/nuget/v/Statik.Mvc.svg?style=flat-square&label=Statik.Files)](http://www.nuget.org/packages/Statik.Files/)
-[![Build Status](https://travis-ci.org/pauldotknopf/statik.svg?branch=develop)](https://travis-ci.org/pauldotknopf/statik)
 
 ## No features?
 

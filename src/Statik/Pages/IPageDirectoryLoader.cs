@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.FileSystemGlobbing;
 
 namespace Statik.Pages
 {

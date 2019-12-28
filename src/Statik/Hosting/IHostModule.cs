@@ -8,7 +8,7 @@ namespace Statik.Hosting
 {
     public interface IHostModule
     {
-        void Configure(IApplicationBuilder app, IHostingEnvironment env);
+        void Configure(IApplicationBuilder app, IWebHostEnvironment env);
 
         void ConfigureServices(IServiceCollection services);
 

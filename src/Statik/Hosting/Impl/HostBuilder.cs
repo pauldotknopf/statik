@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Reflection;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,14 +47,9 @@ namespace Statik.Hosting.Impl
                         factory.AddConsole();
                     })
                     .ConfigureServices(services => {
-                        services.AddSingleton<Startup>();
                         services.AddSingleton(modules);
-                        services.AddSingleton(typeof(IStartup), sp =>
-                        {
-                            var hostingEnvironment = sp.GetRequiredService<IHostingEnvironment>();
-                            return new ConventionBasedStartup(StartupLoader.LoadMethods(sp, typeof(Startup), hostingEnvironment.EnvironmentName));
-                        });
                     })
+                    .UseStartup<Startup>()
                     .Build();
             }
 
@@ -96,19 +90,13 @@ namespace Statik.Hosting.Impl
                 _appBase = appBase;
                 Pages = new ReadOnlyCollection<Page>(modules.SelectMany(x => x.Pages).ToList());
                 _testServer = new TestServer(new WebHostBuilder()
-                    .UseSetting(WebHostDefaults.ApplicationKey,  Assembly.GetEntryAssembly().GetName().Name)
-                    .ConfigureLogging(factory => {
-                        factory.AddConsole();
-                    })
-                    .ConfigureServices(services => {
-                        services.AddSingleton<Startup>();
+                    .UseSetting(WebHostDefaults.ApplicationKey, Assembly.GetEntryAssembly().GetName().Name)
+                    .ConfigureLogging(factory => { factory.AddConsole(); })
+                    .ConfigureServices(services =>
+                    {
                         services.AddSingleton(modules);
-                        services.AddSingleton(typeof(IStartup), sp =>
-                        {
-                            var hostingEnvironment = sp.GetRequiredService<IHostingEnvironment>();
-                            return new ConventionBasedStartup(StartupLoader.LoadMethods(sp, typeof(Startup), hostingEnvironment.EnvironmentName));
-                        });
-                    }));
+                    })
+                    .UseStartup<Startup>());
             }
 
             public IReadOnlyCollection<Page> Pages { get; }

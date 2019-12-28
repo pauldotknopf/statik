@@ -31,15 +31,7 @@ namespace Statik.Embedded
             }
         }
 
-        public string PhysicalPath
-        {
-            get
-            {
-                EnsureExists();
-
-                return _file.ResourceName;
-            }
-        }
+        public string PhysicalPath => null;
 
         public string Name
         {

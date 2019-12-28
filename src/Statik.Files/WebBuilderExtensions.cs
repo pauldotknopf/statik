@@ -76,7 +76,7 @@ namespace Statik.Files
                 
                 webBuilder.Register(requestPath, async context =>
                     {
-                        var env = context.RequestServices.GetRequiredService<IHostingEnvironment>();
+                        var env = context.RequestServices.GetRequiredService<IWebHostEnvironment>();
     
                         var statileFileOptions = Options.Create(new StaticFileOptions());
                         statileFileOptions.Value.FileProvider = fileProvider;

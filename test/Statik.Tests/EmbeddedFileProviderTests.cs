@@ -153,7 +153,7 @@ namespace Statik.Tests
         {
             if (assembly == null)
                 assembly = BuildTestAssemblyResourceResolver();
-            return new EmbeddedFileProvider(assembly, prefix);
+            return new Embedded.EmbeddedFileProvider(assembly, prefix);
         }
     }
 }

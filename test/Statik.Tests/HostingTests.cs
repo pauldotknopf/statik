@@ -58,8 +58,8 @@ namespace Statik.Tests
         private IHostModule BuildTestHostModule()
         {
             var hostModule = new Mock<IHostModule>();
-            hostModule.Setup(x => x.Configure(It.IsAny<IApplicationBuilder>(), It.IsAny<IHostingEnvironment>()))
-                .Callback((IApplicationBuilder app, IHostingEnvironment env) => {
+            hostModule.Setup(x => x.Configure(It.IsAny<IApplicationBuilder>(), It.IsAny<IWebHostEnvironment>()))
+                .Callback((IApplicationBuilder app, IWebHostEnvironment env) => {
                     app.Run(async context => {
                         await context.Response.WriteAsync("Hello, World! " + context.Request.Path + " " + context.Request.PathBase);
                     });

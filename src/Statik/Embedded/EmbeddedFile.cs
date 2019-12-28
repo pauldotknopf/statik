@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace Statik.Embedded
+﻿namespace Statik.Embedded
 {
     internal class EmbeddedFile
     {

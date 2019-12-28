@@ -80,7 +80,7 @@ namespace Statik.Web.Impl
                 Pages = new ReadOnlyCollection<Page>(_pages.Values.ToList());
             }
 
-            public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+            public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
             {
                 app.Use(async (context, next) => {
                    

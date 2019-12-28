@@ -17,7 +17,7 @@ namespace Statik.Embedded
 
         public long Length => -1;
 
-        public string PhysicalPath => _path;
+        public string PhysicalPath => null;
 
         public string Name => Path.GetFileName(_path);
 

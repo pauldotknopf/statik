@@ -1,5 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,11 +15,21 @@ namespace Statik.Mvc
 {
     public static class WebBuilderExtensions
     {
-        public static void RegisterMvcServices(this IWebBuilder webBuilder)
+        public static void RegisterMvcServices(this IWebBuilder webBuilder, params Assembly[] additionalParts)
         {
+            var callingAssembly = Assembly.GetCallingAssembly();
             webBuilder.RegisterServices(services =>
             {
-                services.AddMvc();
+                var parts = additionalParts.ToList();
+                if (!parts.Contains(callingAssembly))
+                {
+                    parts.Add(callingAssembly);
+                }
+                var b = services.AddMvc();
+                foreach (var part in parts)
+                {
+                    b.AddApplicationPart(part);
+                }
             });
         }
         

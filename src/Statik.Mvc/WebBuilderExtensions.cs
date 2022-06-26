@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -25,11 +25,14 @@ namespace Statik.Mvc
                 {
                     parts.Add(callingAssembly);
                 }
+
                 var b = services.AddMvc();
                 foreach (var part in parts)
                 {
                     b.AddApplicationPart(part);
                 }
+
+                b.AddRazorRuntimeCompilation();
             });
         }
         
@@ -39,7 +42,7 @@ namespace Statik.Mvc
                 {
                     var actionSelector = context.RequestServices.GetRequiredService<IActionSelector>();
                     var actionInvokerFactory = context.RequestServices.GetRequiredService<IActionInvokerFactory>();
-    
+
                     var routeContext = new RouteContext(context);
                     if (routeData != null)
                     {

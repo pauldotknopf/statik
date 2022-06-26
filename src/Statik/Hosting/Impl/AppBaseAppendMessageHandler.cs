@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
@@ -29,9 +30,9 @@ namespace Statik.Hosting.Impl
                 copy.Headers.TryAddWithoutValidation(v.Key, v.Value);
             }
 
-            foreach (var v in request.Properties)
+            foreach (var v in request.Options)
             {
-                copy.Properties[v.Key] = v.Value;
+                copy.Options.TryAdd(v.Key, v.Value);
             }
 
             copy.Version = request.Version;
